@@ -19,3 +19,35 @@ description: The Value of Templates in Network Automation
 
 正如前面提到的，模板语言不见得是一个新的概念，但我们从中开到新的想法，甚至整个语言一直都在进入生态系统。如果你看一下模板语言的历史，其中很多模板语言都是服务于web的一个重要部分：动态内容\(dynamic content\)。这在今天很容易被认为是理所当然的，但回到web才刚刚起步时，大多数网站都是由静态内容简历的，动态加载数据内容到页面对web来说是向前迈进了一大步。
 
+## 使用模板进行web开发
+
+Django是一种基于Python的we框架，并且是使用这个概念\(Python-based web framework\)的一个流行的现代例子。Django有一个模板语言，它允许web开发者以同样的方式创建web内容，也提供了一种方法使页面内容动态化。使用Django模板语言，开发者可以在用户请求页面时，指定一个原本为静态页面的部分内容，使其加载动态数据。
+
+下面是一个简单的例子——注意，这看起来很像一个HTML文档，但是某些部分用变量进行了替换\(使用`{{}}`注释表示\)
+
+```markup
+<h1>{{ title }}</h1>
+
+{% for article in article_list %}
+<h2>
+    <a href="{{ article.get_absolute_url }}">
+        {{ article.headline|upper }}
+    </a>
+</h2>
+{% endfor %}
+```
+
+
+
+
+
+## 扩大模板的使用范围
+
+
+
+
+
+
+
+
+

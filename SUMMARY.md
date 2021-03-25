@@ -25,7 +25,7 @@
 * [第六章 网络配置模板](content/wang-luo-pei-zhi-mo-ban/README.md)
   * [现代模板语言的兴起](content/wang-luo-pei-zhi-mo-ban/xian-dai-mo-ban-yu-yan-de-xing-qi.md)
   * [网络在自动化中模板的价值](content/wang-luo-pei-zhi-mo-ban/wang-luo-zi-dong-hua-zhong-mo-ban-de-jia-zhi.md)
-  * [Jinja网络配置模板](content/wang-luo-pei-zhi-mo-ban/jinja-wang-luo-pei-zhi-mo-ban.md)
+  * [网络配置模板Jinja](content/wang-luo-pei-zhi-mo-ban/jinja-wang-luo-pei-zhi-mo-ban.md)
   * [总结](content/wang-luo-pei-zhi-mo-ban/zong-jie.md)
 * [第七章 网络API的运用](content/wang-luo-api-de-yun-yong/README.md)
   * [理解网络API](content/wang-luo-api-de-yun-yong/li-jie-wang-luo-api.md)

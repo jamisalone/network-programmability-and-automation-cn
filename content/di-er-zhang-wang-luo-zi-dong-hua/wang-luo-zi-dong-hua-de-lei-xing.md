@@ -1,3 +1,7 @@
+---
+description: Types of Network Automation
+---
+
 # 网络自动化的类型
 
 自动化等同于快速\(speed\)，可是许多网络任务不要求快速，这个就很好理解为什么一些IT团队没有看到自动化的价值。例如，VLAN创建任务似乎就不太要求“快速”。

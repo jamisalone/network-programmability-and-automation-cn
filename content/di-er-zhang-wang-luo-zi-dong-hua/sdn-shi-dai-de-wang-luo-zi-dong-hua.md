@@ -1,3 +1,7 @@
+---
+description: Network Automation in the SDN era
+---
+
 # SDN时代的网络自动化
 
 * 我们现在将看看即使在部署控制器解决方案（如OpenDaylight，甚至是Cisco ACI或VMware NSX等商业产品）的情况下，网络自动化的持续重要性。

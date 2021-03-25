@@ -1,3 +1,7 @@
+---
+description: Evolving the Management Plane from SNMP to Device APIs
+---
+
 # 网络管理平台SNMP到设备API的演进
 
 如果想要改善日常管理和运维网络的方式，改善必须从如何与被管理的底层设备交互\(interface with\)开始。这个接口\(interface\)是你和自动化工具与设备进行通信的方式，以执行各种类型的网络自动化，如数据收集\(data collection\)和配置管理\(configuration management\)。在本节中，将对可用于连接到网络设备管理平面的不同方法进行概述，首先从SNMP开始，然后是更现代化的方式，如NETCONF和RESTful APIs。然后，我们看看_open networking_ movement \(开放网络运动\)对网络运维和自动化的影响。

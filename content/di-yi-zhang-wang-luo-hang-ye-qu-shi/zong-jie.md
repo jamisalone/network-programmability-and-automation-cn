@@ -1,5 +1,5 @@
 ---
-description: Summary of Chapter 1
+description: Summary
 ---
 
 # 总结

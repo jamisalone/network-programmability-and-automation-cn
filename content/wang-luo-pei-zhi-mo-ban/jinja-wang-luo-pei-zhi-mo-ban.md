@@ -34,6 +34,28 @@ interface {{ interface_name }}
 
 这意味着我们可以在渲染这个模板时传入变量`interface_name`，并且这个位置会填入与`interface_name`相关联的值。
 
+前面的例子假设每个网络接口都有一个相同的配置，如果我们想要配置不同VLAN或者某些接口配置不同的接口描述呢？在这种情况下，我们应该转换配置的一部分成为变量：
+
+```bash
+interface {{ interface_name }}
+ description {{ interface_description }}
+ switchport access vlan {{ interface_vlan }}
+ switchport mode access
+```
+
+以上都是一些简单的例子，但它们**不是命名空间友好的\(namespace-friendely\)**。
+
+当渲染一个模板时，通常会利用像Python语言中类和字典的概念。这可以是我们存储更多数据实例，可以在结果配置中循环并多次写入。我们将在后面的章节中探讨循环，但是现在，这里有一个重写的相同模板，被存储命名为template.j2，利用了类似Python类或字典的方式：
+
+```bash
+interface {{ interface.name }}
+ description {{ interface.description }}
+ switchport access vlan {{ interface.vlan }}
+ switchport mode access
+```
+
+这是一个细微变动，但却是一个重要的变动。对象`interface`作为一个整体传入模板。如果`interface`是一个Python类，则`name`、`description`和`vlan`都是这个**类的属性**。同样的是，如果interface是一个字典——那么唯一的不同就是它们都是字典的**键**，而不是属性，所以渲染引擎会在渲染这个模板时自动为这些键放置放置对应的值。
+
 
 
 ## 在Python中渲染Jinja模板文件

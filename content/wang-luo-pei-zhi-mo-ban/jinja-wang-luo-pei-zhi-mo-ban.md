@@ -4,7 +4,7 @@ description: Jinja for Network Configuration Templates
 
 # 网络配置模板Jinja
 
-本章的剩余部分将特别关注一种模板语言——Jinja。我们将从一些基础知识开始，然后逐渐上升到更高级的主题，同时展示如何使用这些概念来生成一致\(consistent\)的网络设备配置。
+本章的剩余部分将特别关注一种模板语言——**Jinja**。我们将从一些基础知识开始，然后逐渐上升到更高级的主题，同时展示如何使用这些概念来生成一致\(consistent\)的网络设备配置。
 
 ## 为什么使用Jinja？
 
@@ -55,8 +55,6 @@ interface {{ interface.name }}
 ```
 
 这是一个细微变动，但却是一个重要的变动。对象`interface`作为一个整体传入模板。如果`interface`是一个Python类，则`name`、`description`和`vlan`都是这个**类的属性**。同样的是，如果interface是一个字典——那么唯一的不同就是它们都是字典的**键**，而不是属性，所以渲染引擎会在渲染这个模板时自动为这些键放置放置对应的值。
-
-
 
 ## 在Python中渲染Jinja模板文件
 

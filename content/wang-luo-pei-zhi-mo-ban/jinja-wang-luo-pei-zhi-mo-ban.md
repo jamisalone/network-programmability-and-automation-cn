@@ -58,6 +58,35 @@ interface {{ interface.name }}
 
 ## 在Python中渲染Jinja模板文件
 
+在前面的例子中，我们看到了一个基本的交换机端口配置的Jinja模板，但我们并没有探索模板实际上是如何渲染的，是什么驱动数据嵌入到模板中，以生成最终配置文件的。现在，我们使用Python和Jinja2库来探索这个问题。
+
+{% hint style="info" %}
+虽然模板语言本身被称为Jinja，但**用于处理Jinja的Python库称为Jinja2**。
+{% endhint %}
+
+让我们使用上一个例子中的相同模板片段，然后使用Python将真实数据填充到那些动态字段中。我们将在这个例子中使用Python解释器，这样你就可以在自己的机器上操作。
+
+{% hint style="info" %}
+Python中的Jinja2渲染引擎并不是标准库的一部分，所以默认情况下没有安装。使用命令`pip install jinja2`用`pip`来安装，就像第四章中提到的，在**PyPI**中找到的其它Python包一样。
+{% endhint %}
+
+一旦安装完Jinja2库，我们应该首先导入我们需要的对象，以便渲染我们的模板。
+
+```python
+>>> from jinja2 import Environment, FileSystemLoader
+```
+
+接下来，我们需要设置环境，让渲染器知道去哪里找到模板。
+
+```python
+>>> ENV = Environment(loader=FileSystemLoader('.'))
+>>> template = ENV.get_template("template.j2")
+```
+
+
+
+
+
 
 
 

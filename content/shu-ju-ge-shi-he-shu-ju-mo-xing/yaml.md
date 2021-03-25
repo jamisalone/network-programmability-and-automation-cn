@@ -1,3 +1,7 @@
+---
+description: YAML
+---
+
 # YAML
 
 YAML是 "YAML Ain't Markup Language "的缩写，这似乎告诉我们，YAML的创造者并不希望它只是成为某种新的标记标准，而是以一种人类可读的方式来表示数据的独特尝试。YAML是一种对人类极友好的数据格式。

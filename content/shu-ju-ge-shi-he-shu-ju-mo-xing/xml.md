@@ -1,3 +1,7 @@
+---
+description: XML
+---
+
 # XML
 
 虽然YAML是人机交互的合适选择，但当软件元素需要相互通信时，其他格式如XML和JSON往往会受到青睐，成为数据表示\(data representation\)的选择。

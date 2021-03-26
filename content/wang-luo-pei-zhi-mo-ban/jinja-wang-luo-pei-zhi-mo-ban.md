@@ -301,7 +301,85 @@ interface GigabitEthernet0/1
 
 ### 在字典列表中生成接口配置
 
+最后一个例子中，我们将结合列表和字典的使用，让模板真正为我们所用。每个接口都有最近的字典，其中键将是每个网络接口的属性，如`name`、`description`或者`uplink`。每个字典被存储在一个列表中，模板将在这个列表中迭代来生成配置内容。
 
+首先，这是上面描述的用Python表示的数据结构：
+
+```python
+interfaces = [
+    {
+        "name": "GigabitEthernet0/1",
+        "desc": "uplink port",
+        "uplink": True
+    },
+    {
+        "name": "GigabitEthernet0/2",
+        "desc": "Server port number one",
+        "vlan": 10
+    },
+    {
+        "name": "GigabitEthernet0/3",
+        "desc": "Server port number two",
+        "vlan": 10
+    }
+]
+print(template.render(interface_list=interfaces))
+```
+
+这使得我们可以编写一个非常强大的模板，它可以用于遍历\(iterate over\)这个列表；对于每个列表项，只需要简单地引用键，这些键可以在列表中的特定字典中找到。下个例子依然使用学过的循环和条件逻辑。
+
+```text
+{% for interface in interface_list %}
+ interface {{ interface.name }}
+ description {{ interface.desc }}
+{% if interface.uplink %}
+ switchport mode trunk
+{% else %}
+ switchport access vlan {{ interface.vlan }}
+ switchport mode access
+{% endif %}
+{% endfor %}
+```
+
+{% hint style="info" %}
+当使用Jinja访问字典中的数据时，你可以使用传统的Python语法`dict['key']`，或者像我们一直展示的方式`dict.key`那样的速记形式。这两种方式是相同的，如果你试图访问一个不存在的键，则一个**key error**就会产生。但是，如果一个键是可选的，或者你想在键不存在的情况下返回某个其它值——例如`dict.get(key, 'UNKNOWN')`，你也可以使用Jinja中的`get()`方法\(method\)。
+{% endhint %}
+
+如前所述，将数据嵌入到Python程序中是不好的形式\(参考前面例子中`interfaces`字典列表\)。不使用这种方式，我们把数据放到YAML文件中，并重写我们的应用程序，使得在使用数据渲染模板之前导入这些数据。这是一种好的做法，因为它允许一个没有Python编写经验的人通过更改简单的YAML文件来编辑网络配置。
+
+下面是一个简单的YAML文件示例，它与上面的`interfaces`列表是一样的：
+
+```yaml
+---
+- name: GigabitEthernet0/1
+  desc: uplink port
+  uplink: true
+- name: GigabitEthernet0/2
+  desc: Server port number one
+  vlan: 10
+- name: GigabitEthernet0/3
+  desc: Server port number two
+  vlan: 10
+```
+
+正如在第五章讨论的，在Python中导入一个YAML文件是非常容易的。作为一个新人，这里提出完整的Python应用代码，没有使用静态、嵌入式的字典列表，我们仅仅导入一个YAML文件来获取这些数据。
+
+```python
+from jinja2 import Environment, FileSystemLoader
+import yaml
+
+ENV = Environment(loader=FileSystemLoader('.'))
+
+template = ENV.get_template("template.j2")
+
+with open("data.yml") as f:
+    interfaces = yaml.load(f)
+    print(template.render(interface_list=interfaces))
+```
+
+我们可以重用之前创建的模板，并达到相同效果——但这次，用来填充模板的数据来自一个外部的YAML文件，这更容易维护。现在Python文件只包含拉取数据和模板呈现的逻辑。这样的方式使得模板渲染系统更加可维护。
+
+这一小节包含了循环和条件逻辑的基础知识。在该小节中，我们实际上只探讨了一部分内容。你可以继续探索这些概念，并将它们应用到你自己的用例中。
 
 ## Jinja过滤器
 

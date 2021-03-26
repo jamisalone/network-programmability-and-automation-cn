@@ -180,7 +180,18 @@ interface {{ interface.name }}
 
 ### 使用循环创建多个交换机端口配置
 
+当目前为止，我们仅配置了一个接口，所以让我们看看是否可以使用Jinja循环来创建多个交换端口的配置。为此，我们使用for循环，这与我们通常使用的Python中的for循环语法极为相似。
 
+```text
+{% for n in range(10) %}
+interface GigabitEthernet0/{{ n+1 }}
+ description {{ interface.description }}
+ switchport access vlan {{ interface.vlan }}
+ switchport mode access
+{% endfor %}
+```
+
+需要注意的是，这里再次使用到`{% ... %}`语法来包含每个逻辑表达\(logic statements\)。在这个模板中，我们调用`range()`函数在一个整数列表中进行迭代，并且对于每轮迭代，我们都打印出“**n+1**”轮的结果，因为`range()`从0开始迭代而通常交换端口编号从1开始。
 
 ### 使用循环和条件来创建交换机端口配置
 

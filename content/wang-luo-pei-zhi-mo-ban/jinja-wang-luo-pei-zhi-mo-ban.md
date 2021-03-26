@@ -383,7 +383,19 @@ with open("data.yml") as f:
 
 ## Jinja过滤器
 
+### 使用大写Jinja过滤器
 
+
+
+### 链式Jinja过滤器
+
+
+
+### 创建自定义的Jinja过滤器
+
+
+
+### 使用已有Python代码作为Jinja过滤器
 
 
 

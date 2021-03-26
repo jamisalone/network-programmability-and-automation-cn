@@ -147,11 +147,36 @@ print(template.render(interface=interface_obj))
 
 ## 条件与循环
 
+是时候让我们的模板真正地为我们工作了。前面的例子对于理解如何将动态数据插入到文本文件中是很有用的，但这只是扩大网络模板到适当自动化网络配置的过程的一部分。
 
+{% hint style="info" %}
+Jinja允许我们将Python式的逻辑嵌入到我们的模板文件中，以便执行决策或将重复数据压缩成一块，该块将在渲染时通过for循环解压缩。虽然这些工具是非常强大的，但他们也可能是一个带来事故。 
+
+重要的是不要太沉迷于把各种高级逻辑放入你的模板中——Jinja有一些非常有用的功能，但它从来没有打算成为一个成熟的\(full-blown\)编程语言，所以最好保持良好的平衡。 
+
+阅读[Jinja FAQ](http://jinja.pocoo.org/docs/dev/faq/)-特别是标题为“将逻辑放入模板不是一个可怕的想法吗？”的部分，以获得一些提示。
+{% endhint %}
 
 ### 使用条件逻辑来创建交换机端口配置
 
+让我们继续配置单个交换机端口\(switchport\)的例子——但在这种情况下，我们希望通过使用模板文件本身的条件来决定要渲染什么。
 
+通常情况下，一些交换机端口将配置为VLAN trunk接口，另一些将配置为“mode access”。一个好的例子是接入层交换机，其中两个或多个接口时“uplink”接口且需要被配置为允许所有VLAN通过。我们前面的例子展示了一个“uplink”布尔属性，如果接口是上行端口则设置值为True，如果只是接入接口，则设置为False。我们可以在模板中使用一个条件来检查这个值：
+
+```text
+interface {{ interface.name }}
+ description {{ interface.description }}
+{% if interface.uplink %}
+ switchport mode trunk
+{% else %}
+ switchport access vlan {{ interface.vlan }}
+ switchport mode access
+{% endif %}
+```
+
+简而言之，如果接口的`uplink`属性是`True`，则我们想要配置该接口为VLAN Trunk。否则，我们要确保它被设置为正确的access mode。
+
+在前面的例子中，我们看到了一种新的语言—— `{% ... %}`括号是一个特殊的Jinja标签，它表示某种类型的逻辑。此模板的建立旨在配置GigabitEthernet0/1为VLAN Trunk，然后其它接口被置于vlan 10中，配置为access mode。
 
 ### 使用循环创建多个交换机端口配置
 

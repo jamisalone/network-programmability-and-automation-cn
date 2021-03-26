@@ -45,20 +45,22 @@ interface {{ interface_name }}
 
 以上都是一些简单的例子，但它们**不是命名空间友好的\(namespace-friendely\)**。
 
-当渲染一个模板时，通常会利用像Python语言中类和字典的概念。这可以是我们存储更多数据实例，可以在结果配置中循环并多次写入。我们将在后面的章节中探讨循环，但是现在，这里有一个重写的相同模板，被存储命名为template.j2，利用了类似Python类或字典的方式：
+当渲染一个模板时，通常会利用像Python语言中类和字典的概念。这可以是我们存储更多数据实例，可以在结果配置中循环并多次写入。我们将在后面的章节中探讨循环，但是现在，这里有一个重写的相同模板，被存储命名为_`template.j2`_，利用了类似Python类或字典的方式：
 
+{% code title="template.j2" %}
 ```bash
 interface {{ interface.name }}
  description {{ interface.description }}
  switchport access vlan {{ interface.vlan }}
  switchport mode access
 ```
+{% endcode %}
 
 这是一个细微变动，但却是一个重要的变动。对象`interface`作为一个整体传入模板。如果`interface`是一个Python类，则`name`、`description`和`vlan`都是这个**类的属性**。同样的是，如果interface是一个字典——那么唯一的不同就是它们都是字典的**键**，而不是属性，所以渲染引擎会在渲染这个模板时自动为这些键放置放置对应的值。
 
 ## 在Python中渲染Jinja模板文件
 
-在前面的例子中，我们看到了一个基本的交换机端口配置的Jinja模板，但我们并没有探索模板实际上是如何渲染的，是什么驱动数据嵌入到模板中，以生成最终配置文件的。现在，我们使用Python和Jinja2库来探索这个问题。
+在前面的例子中，我们看到了一个基本的交换机端口配置的Jinja模板，但我们并没有探索模板实际上是**如何渲染的，是什么驱动数据嵌入到模板中，以生成最终配置文件的**。现在，我们使用Python和Jinja2库来探索这个问题。
 
 {% hint style="info" %}
 虽然模板语言本身被称为Jinja，但**用于处理Jinja的Python库称为Jinja2**。
@@ -100,15 +102,52 @@ Python中的Jinja2渲染引擎并不是标准库的一部分，所以默认情�
 重要的是要记住，你很少需要在Python 中手动创建数据结构来填充数据模板。在本书中，只是为了举例说明的目的，但你应该总是编写你的软件来从其他来源获取数据，而不是将数据嵌入到你的软件中。
 {% endhint %}
 
+现在我们拥有了渲染模板所需的一切。我们将调用模板对象的`render()`函数将数据传递到模板引擎中，然后使用`print()`函数将渲染后的结果输出到屏幕。
 
+```python
+>>> print(template.render(interface=interface_dict))
+interface GigabitEthernet0/1
+ description Server Port
+ switchport access vlan 10
+ switchport mode access
+```
 
+注意这里我们给模板对象的`render()`函数传递了一个参数`interface=interface_dict`。注意名称——参数`interface`这个关键词对应的是我们Jinja模板中对`interface`的引用。这就是如何将接口字典\(`interface_dict`\)传递给模板引擎的——当模板引擎看到**接口**或**接口字典的键的引用**时，它将使用这里传递的字典来满足该引用。
 
+正如所看到的，呈现的输出如我们所料。然而，我们不一定要用一个Python字典。将其它Python库中的数据驱动到Jinja模板中是常见的，则我们还可以采用Python类的形式。
 
+下一个例子展示了一个Python程序，类似于我们刚刚举的例子，但没有使用字典，而是使用Python类。
 
+```python
+from jinja2 import Environment, FileSystemLoader
 
+ENV = Environment(loader=FileSystemLoader('.'))
 
+template = ENV.get_template("template.j2")
+
+class NetworkInterface(object):
+    def __init__(self, name, description, vlan, uplink=False):
+        self.name = name
+        self.description = description
+        self.vlan = vlan
+        self.uplink = uplink
+    
+interface_obj = NetworkInterface("GigabitEthernet0/1", "Server Port", 10)
+
+print(template.render(interface=interface_obj))
+```
+
+这个程序的输出与之前的程序输出是一样的。因此，没有一种“正确”的方式来用数据填充Jinja模板——这取决于数据的来源。幸运的是，Python Jinja2库在数据填充这方面允许一些**灵活性**。
+
+{% hint style="info" %}
+在这本书中，我们并没有过多地涉及Python类。这是因为还有许多其他资源可以学习如何在 你的Python代码中实现类，并且通常网络工程师会使用API来很好地映射到像列表或字典的简单结构。这本书旨在弥合软件基础知识和存在于下一代行业的工具之间的差距。
+
+然而，面向对象编程和类的使用有很多好处。使用得当的话，面向对象编程可以更易读、更易维护，甚至更易测试。记住一点，当你编写代码时，要决定是采取一个成熟的对象定义，还是满足于采用简单的字典。
+{% endhint %}
 
 ## 条件与循环
+
+
 
 ### 使用条件逻辑来创建交换机端口配置
 

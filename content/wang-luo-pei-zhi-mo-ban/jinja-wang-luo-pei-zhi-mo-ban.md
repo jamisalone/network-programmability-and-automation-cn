@@ -228,7 +228,76 @@ interface GigabitEthernet0/3
 
 ### 在for循环中对变量进行循环以生成配置
 
+在前一个例子中我们能够在Jinja模板中访问字典中的键\(`interface.description`或`interface.vlan`\)，但如果我们通过使用for循环对字典和列表进行实际的迭代呢？
 
+让我们想象一下，将下面的列表作为\*`interface_list`\*传入模板。相关Python代码为：
+
+```text
+intlist = [
+	"GigabitEthernet0/1",
+	"GigabitEthernet0/2",
+	"GigabitEthernet0/3"
+]
+print(template.render(interface_list=intlist))
+```
+
+然后我们在循环中引用interface\_list，这样我们可以获取接口列表中的各个成员接口并对它们分别生成一个交换端口配置。注意，嵌套条件已经被修改了，因为我们不会使用计数变量n了：
+
+```text
+{% for iface in interface_list %}
+ interface {{ iface }}
+{% if iface == "GigabitEthernet0/1" %}
+ switchport mode trunk
+{% else %}
+ switchport access vlan 10
+ switchport mode access
+{% endif %}
+
+{% endfor %}
+```
+
+现在我们可以在每个循环的迭代中简单引用`iface`\(line 2\)来检索到该列表中的当前项。
+
+我们也可以用字典来做同样的事情。下面是一段相关的Python代码，用于构造和传递用于Jinja模板的字典。这次我们从简，仅仅传递一组接口名\(interface names\)作为键和对应的端口描述作为值:
+
+```text
+intdict = {
+	"GigabitEthernet0/1": "Server port number one",
+	"GigabitEthernet0/2": "Server port number two",
+	"GigabitEthernet0/3": "Server port number three"
+}
+print(template.render(interface_dict=intdict))
+```
+
+我们可以用与Python相同的方式，对用于迭代该字典的循环进行调整：
+
+```text
+{% for name, desc in interface_dict.items() %}
+interface {{ name }}
+ description {{ desc }}
+{% endfor %}
+```
+
+`for name`、`desc`意味着在循环的每一次迭代中，`name`将作为字典的键，然后`desc`作为对应键的值。不要忘记添加例子中使用的`.item()`符号，以便正确将\*`interface_dict`\*拆开为`name`和`desc`。
+
+这样我们就可以在模板中轻松地引用`name`和`desc`，结果如下所示：
+
+```text
+interface GigabitEthernet0/3
+ description Server port number three
+
+interface GigabitEthernet0/2
+ description Server port number two
+
+interface GigabitEthernet0/1
+ description Server port number one
+```
+
+{% hint style="info" %}
+你可能已经注意到，示例中的输出是无需的。这是由于字典是无序的，而我们使用for循环来迭代字典中的各项。你可能还记得我们在第四章中第一次讨论字典的情况。
+{% endhint %}
+
+你可能已经注意到前几个例子中的一些限制。在这几个例子中，我们使用range\(\)函数进行迭代，意味着我们没有像使用类或字典时那样拥有关于接口的所有有价值的元数据。即使我们在后续的例子中使用了字典，它的结构也不过是存储一个接口名与该接口的描述。
 
 ### 在字典列表中生成接口配置
 

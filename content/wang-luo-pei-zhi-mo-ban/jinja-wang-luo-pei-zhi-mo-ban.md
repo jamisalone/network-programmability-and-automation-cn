@@ -161,7 +161,7 @@ Jinja允许我们将Python式的逻辑嵌入到我们的模板文件中，以便
 
 让我们继续配置单个交换机端口\(switchport\)的例子——但在这种情况下，我们希望通过使用模板文件本身的条件来决定要渲染什么。
 
-通常情况下，一些交换机端口将配置为VLAN trunk接口，另一些将配置为“mode access”。一个好的例子是接入层交换机，其中两个或多个接口时“uplink”接口且需要被配置为允许所有VLAN通过。我们前面的例子展示了一个“uplink”布尔属性，如果接口是上行端口则设置值为True，如果只是接入接口，则设置为False。我们可以在模板中使用一个条件来检查这个值：
+通常情况下，一些交换机端口将配置为VLAN trunk接口，另一些将配置为“mode access”。一个好的例子是接入层交换机，其中两个或多个接口时“uplink”接口且需要被配置为允许所有VLAN通过。我们前面的例子展示了一个“uplink”布尔属性，如果接口是上行端口则设置值为True，如果只是接入接口，则设置为False。我们可以在模板中使用一个条件语句来检查这个值：
 
 ```text
 interface {{ interface.name }}
@@ -193,9 +193,38 @@ interface GigabitEthernet0/{{ n+1 }}
 
 需要注意的是，这里再次使用到`{% ... %}`语法来包含每个逻辑表达\(logic statements\)。在这个模板中，我们调用`range()`函数在一个整数列表中进行迭代，并且对于每轮迭代，我们都打印出“**n+1**”轮的结果，因为`range()`从0开始迭代而通常交换端口编号从1开始。
 
-### 使用循环和条件来创建交换机端口配置
+### 使用循环和条件逻辑来创建交换机端口配置
 
+这使得我们得到10个相同配置的交换端口——但是如果我们想要对其中的一些端口进行不同的配置呢？以我们探讨Jinja条件语句时的例子为例——也许第一个端口是一个VLAN trunk。我们结合上面学到的条件语句和for循环来实现不同配置：
 
+```text
+{% for n in range(10) %}
+interface GigabitEthernet0/{{ n+1 }}
+ description {{ interface.description }}
+{% if n+1 == 1 %}
+ switchport mode trunk
+{% else %}
+ switchport access vlan {{ interface.vlan }}
+ switchport mode access
+{% endif %}
+
+{% endfor %}
+```
+
+结果是GigabitEthernet0/1被配置为VLAN Trunk，但是GigabitEthernet0/2–10依然为access mode。下面是使用模拟数据生成的接口描述：
+
+```text
+interface GigabitEthernet0/1
+ description TRUNK INTERFACE
+ switchport mode trunk
+interface GigabitEthernet0/2
+ description ACCESS INTERFACE
+ switchport mode access
+interface GigabitEthernet0/3
+ description ACCESS INTERFACE
+ switchport mode access
+...
+```
 
 ### 在for循环中对变量进行循环以生成配置
 

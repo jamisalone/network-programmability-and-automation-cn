@@ -495,7 +495,33 @@ interface {{ interface.name }}
 
 ### 使用已有Python代码作为Jinja过滤器
 
+我们并不总是要写自己的函数来创建一个自定义的Jinja过滤器。有时，现有的Python函数可以很好地作为Jinja过滤器使用。使用现有的Python函数是相当容易的，只要你确保你正确地导入它，并把它当作你已经创建的函数来传递它。
 
+举个例子，我们可以使用bracket\_expansion库中的一个函数来快速生成一组接口名称，而不必制作包含这些名称的列表或字典。请阅读下面的内联注释，了解更多细节：
+
+```python
+# Import Jinja2 library
+from jinja2 import Environment, FileSystemLoader
+
+# bracket_expansion is also a third party library.
+# Install through pip before running this.
+from bracket_expansion import bracket_expansion
+
+# Declare template environment
+ENV = Environment(loader=FileSystemLoader('.'))
+
+# Filters are added to the ENV object after declaration. "bracket_expansion"
+# is a function that we're passing in--the template engine will actually
+# execute this function when rendering the template.
+ENV.filters['bracket_expansion'] = bracket_expansion
+template = ENV.get_template("template.j2")
+
+# The bracket_expansion function we've passed in as a filter requires a
+# text pattern to work against. We'll pass this in as "iface_pattern"
+print(template.render(iface_pattern='GigabitEthernet0/0/[0-3]'))
+```
+
+这是一个非常强大的工具——你完全可以编写你自己的Python功能来将过滤器提升到另一个更高的水平。你可以尝试使用其它文本操作函数和库，或者也可以是你自己编写的函数。
 
 ## Jinja的模板继承
 

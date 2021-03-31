@@ -246,12 +246,12 @@ print(template.render(interface_list=intlist))
 ```text
 {% for iface in interface_list %}
  interface {{ iface }}
-{% if iface == "GigabitEthernet0/1" %}
- switchport mode trunk
-{% else %}
- switchport access vlan 10
- switchport mode access
-{% endif %}
+ {% if iface == "GigabitEthernet0/1" %}
+  switchport mode trunk
+ {% else %}
+  switchport access vlan 10
+  switchport mode access
+ {% endif %}
 
 {% endfor %}
 ```
@@ -332,12 +332,12 @@ print(template.render(interface_list=interfaces))
 {% for interface in interface_list %}
  interface {{ interface.name }}
  description {{ interface.desc }}
-{% if interface.uplink %}
- switchport mode trunk
-{% else %}
- switchport access vlan {{ interface.vlan }}
- switchport mode access
-{% endif %}
+ {% if interface.uplink %}
+  switchport mode trunk
+ {% else %}
+  switchport access vlan {{ interface.vlan }}
+  switchport mode access
+ {% endif %}
 {% endfor %}
 ```
 
@@ -383,19 +383,115 @@ with open("data.yml") as f:
 
 ## Jinja过滤器
 
-偶尔，我们需要对模板中的一个变量进行某种操作。
+偶尔，我们需要对模板中的一个变量进行某种操作。一个简单的例子可能是将一段文本转换为全大写字符。
 
-### 使用"大写"Jinja过滤器
+过滤器是我们可以实现这个目标。就像在Linux发行版的终端Shell中使用管道\(pipe\)将一条命令的输出输入到另一条命令中一样，我们可以使用管道将将Jinja语句的结果输入到一个过滤器中，输出的文本将再进入到我们模板，最后得到渲染后的输出。
 
+### 使用"Upper"\(大写\)Jinja过滤器
 
+以上一个模板为例，使用一个内置过滤器来将每个接口描述大写。
+
+```text
+{% for interface in interface_list %}
+interface {{ interface.name }}
+ description {{ interface.desc|upper }}
+  {% if interface.uplink %}
+  switchport mode trunk
+ {% else %}
+  switchport access vlan {{ interface.vlan }}
+  switchport mode access
+ {% endif %}
+{% endfor %}
+```
+
+\(line 2\)在花括号`{{}}`内，`interface.desc`变量名后，我们可以使用管道符`|`将`desc`值过滤到**upper**过滤器中。Upper过滤器是Python的Jinja2库中内置的一个过滤器，可以将管道中的文本大写。
 
 ### 链式Jinja过滤器
 
+我们可以将过滤器像链子一样连接起来，这与Linux中将管道或Python中方法\(Method\)的“链接”的方式相差无几。让我们用“reverse\(逆向\)”过滤器将我们的大写文本按照字符从后往前打印输出：
 
+```text
+{% for interface in interface_list %}
+interface {{ interface.name }}
+ description {{ interface.desc|upper|reverse }}
+ {% if interface.uplink %}
+  switchport mode trunk
+ {% else %}
+  switchport access vlan {{ interface.vlan }}
+  switchport mode access
+ {% endif %}
+{% endfor %}
+```
+
+这会产生下面的输出：
+
+```text
+interface GigabitEthernet0/1
+ description TROP KNILPU
+ switchport mode trunk
+
+interface GigabitEthernet0/2
+ description ENO REBMUN TROP REVRES
+ switchport access vlan 10
+ switchport mode access
+
+interface GigabitEthernet0/3
+ description OWT REBMUN TROP REVRES
+ switchport access vlan 10
+ switchport mode access
+```
+
+总结一下，我们对`GigabitEthernet0/1`原本的描述先是“uplink port”，然后\(经过upper过滤器\)变成“UPLINK PORT”，再经过逆向过滤器改变为“TROP KNILPU”，最后结果打印到模板实例中。
 
 ### 创建自定义的Jinja过滤器
 
+前面讲的过滤器很棒，而且有许多内置过滤器，都在Jinja规范\(Jinja specification\)中有所记载。但如果我们想要创建自己的过滤器呢？或许我们需要自定义过滤器来执行一些特定的网络自动化功能，但是这些功能并不在Jinja2库中？
 
+幸运的是，Jinja2库允许我们自定义过滤器。下一个例子将展示一个完整的Python脚本，这个脚本中，我们定义了一个新的函数`get_interface_speed()`。这个函数很简单——在提供的字符串变量中，查找某些关键字，如“gigabit”或“fast”，然后返回当前Mbps值。它还从YAML文件中加载我们所有的模板数据。
+
+```python
+# 导入Jinja2库和PyYAML
+from jinja2 import Environment, FileSystemLoader
+import yaml
+
+# 声明模板环境
+ENV = Environment(loader=FileSystemLoader('.'))
+
+def get_interface_speed(interface_name):
+    """ 
+    get_interface_speed函数通过查找名称中的某些关键词，返回给定网络接口的默认Mbps值
+    """
+    if 'gigabit' in interface_name.lower():
+        return 1000
+    if 'fast' in interface_name.lower():
+        return 100
+
+# 在声明后，过滤器被添加到ENV对象中。注意，我们实际上是在传递“get_interface_speed”
+# 函数，而不是执行该函数——当我们调用template.render()时，模板引擎会执行这个函数
+ENV.filters['get_interface_speed'] = get_interface_speed
+template = ENV.get_template("templatestuff/template.j2")
+ 
+# 我们加载我们的YAML文件，并在渲染YAML文件时将其传入到模板中
+with open("templatestuff/data.yml") as f:
+    interfaces = yaml.load(f)
+    print(template.render(interface_list=interfaces))
+```
+
+完成过滤器的自定义后，我们稍微调整一下我们的模板，如下一个例子所示，我们可以通过将`interface.name`传入`get_interface_speed`过滤器来使用这个过滤器。输出结果将是函数\(`get_interface_speed()`\)决定返回的任何整数。由于所有接口名都是**GigabitEthernet**，所以速度都被设置为1000。
+
+```text
+{% for interface in interface_list %}
+interface {{ interface.name }}
+ description {{ interface.desc|upper|reverse }}
+ {% if interface.uplink %}
+  switchport mode trunk
+ {% else %}
+  switchport access vlan {{ interface.vlan }}
+  switchport mode access
+ {% endif %}
+ speed {{ interface.name|get_interface_speed }}
+{% endfor %}
+```
 
 ### 使用已有Python代码作为Jinja过滤器
 

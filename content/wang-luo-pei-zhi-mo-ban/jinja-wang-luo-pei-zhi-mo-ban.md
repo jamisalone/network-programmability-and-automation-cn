@@ -525,13 +525,63 @@ print(template.render(iface_pattern='GigabitEthernet0/0/[0-3]'))
 
 ## Jinja的模板继承
 
+当你为你的网络配置创建更大、更强大的模板时，你可能希望将模板分解成更小、更专用\(specialized\)的部分。很常见的一种情况是，有一个VLAN配置模板，一个接口模板，也许还有一个路由协议的模板。这种组织工具，尽管是可选的，但是提供了更多的灵活性。问题是，如何以有意义的方式将这些模板连接起来，以形成一个完整的配置？
 
+Jinja使你可以在一个模板文件中进行**继承**，这是解决该问题的一个很方便的解决方案。举例来说，你有一个`vlans.j2`文件，其中包含了VLAN配置，并且你可以继承这个文件来生成一个VLAN配置。你可能正在编写一个接口配置模板，而你希望也能从另一个模板中生成一个VLAN配置。下面这个例子，我们展示一个使用`include`语句实现集成的例子：
 
+```text
+{% **include** 'vlans.j2' %}
 
+{% for name, desc in interface_dict.items() %}
+interface {{ name }}
+ description {{ desc }}
+{% endfor %}
+```
+
+这将渲染`vlans.j2`，并将生成的文本插入到包含它的模板的渲染输出中。使用`include`语句，模板编写者可以编写由模块化组件构成的交换机配置\(switch configurations\)。这使得配置生成变得有序。
+
+另一种Jinja继承工具是`block`语句。这是一个强大，但是更复杂的继承方法，因为它模仿了Python等正式语言中的对象继承。使用`block`语句，你可以指定你的模板中可以被子模板\(child template\)重写的部分。如果一个模板不存在子模版，则它仍然会使用默认设置。
+
+下面展示一个在父模板中使用`block`语句的例子：
+
+{% code title="no-http.j2" %}
+```text
+{% for interface in interface_list %}
+interface {{ interface.name }}
+ description {{ interface.desc }}
+{% endfor %}
+!
+{% **block** http %}
+ no ip http server
+ no ip http secure-server
+{% endblock %}
+```
+{% endcode %}
+
+我们将这个模板命名为`no-http.j2`，表示我们正常情况下关闭交换机中的HTTP服务器。但是，我们可以使用block语句来给我们带来更大的灵活性。我们可以创建一个`yes-http.j2`子模版，它用于重写这个块\(block\)，并且如果我们需要时，可以输出使能HTTP服务器的配置。
+
+{% code title="yes-http.j2" %}
+```text
+{% extends "no-http.j2" %}
+{% block http %}
+ ip http server
+ ip http secure-server
+{% endblock %}
+```
+{% endcode %}
+
+这使得我们可以简单地通过渲染子模版来使能HTTP服务器。该例子的第一行扩展了父模板`no-http.j2`，所以所有的接口配置仍然会出现在渲染的输出中。但是，因为我们已经渲染了子模版，所以子模版的http块\(block\)重写了父模板的http块。使用块的方式，对那些可能需要改变但传统变量替换又不适用的配置部分非常有用。
+
+[Jinja文档的模板继承部分](https://jinja.palletsprojects.com/en/master/templates/#template-inheritance)对上述内容讲得更详细，该文档是很好的资源，可以添加到收藏夹。
 
 ## Jinja的变量创建
 
+Jinja允许我们在模板中创建变量。我们使用`set`语句。一个常见用例就是缩短变量\(variable shortening\)。有时你不得不通过几个嵌套的字典或Python对象才能得到你想获取的值，而且你可能还想在你的模板中多次重复使用这个值。与其重复一长串属性或键，不如使用`set`语句以一个短得多的名字来代替特定值：
 
+```text
+{% set int_desc = switch01.config.interfaces['GigabitEthernet0/1']['description'] %}
+{{ int_desc }}
+```
 
 
 

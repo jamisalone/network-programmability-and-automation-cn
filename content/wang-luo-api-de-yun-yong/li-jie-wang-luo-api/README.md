@@ -8,7 +8,7 @@ description: Understanding Network APIs
 
 让我们从深入了解基于HTTP的RESTful API开始。
 
-![](../../.gitbook/assets/image.png)
+![](../../../.gitbook/assets/image.png)
 
 ## 熟悉基于HTTP的APIs
 

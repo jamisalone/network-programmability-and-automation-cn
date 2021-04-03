@@ -18,7 +18,7 @@ RESTful API在网络行业中越来越流行，使用也越来越普遍，虽然
 
 在图7-1中，其中一个主要区别是发送至和来自Web服务器的数据。当查看互联网内容\(browsing the Internet\)时，你会接收到HTML数据，是你的浏览器对这些数据进行解释\(interpret\)，以便能够正确地现实内容。另一方面，当向暴露RESTful API的Web服务器发出HTTP GET请求时\(记住，它是通过URLs暴露的\)，你会收到以JSON或XML编码的返回数据。谈到JSON或XML，就是我们将使用我们在第五章所涉及的内容。因为你收到以JSON或XML编码的返回数据，应用程序必须明白如何解释\(interpret\)JSON和/或XML。我们将继续进行概述，以便我们在开始探索RESTful HTTP API的使用之前有一个更完整的认识。
 
-现在我们已经介绍了RESTful API的高层次概述，让我们再深入一步，看看RESTful API的起源。值得注意的是，现代基于web的RESTful APIs的诞生和结构来自于Roy Fielding在2000年发表的博士论文。在这篇名为_架构风格和基于网络的软件架构设计_\(_Architectural Styles and the Design of Network-based Software Architectures_\)的论文中，他定义了在互联网\(用REST定义的架构\)上使用网络系统工作的复杂细节。
+现在我们已经介绍了RESTful API的高层次概述，让我们再深入一步，看看RESTful API的起源。值得注意的是，现代基于web的RESTful APIs的诞生和结构来自于Roy Fielding在2000年发表的博士论文。在这篇名为_架构风格和基于网络的软件架构设计_ \(_Architectural Styles and the Design of Network-based Software Architectures_\)的论文中，他定义了在互联网\(用REST定义的架构\)上使用网络系统工作的复杂细节。
 
 存在**六个架构约束**\(architectural constraints\)，一个接口必须符合这六个约束才能被认为是RESTful的。在本章旨在讨论其中三个约束。
 
@@ -36,13 +36,13 @@ RESTful API在网络行业中越来越流行，使用也越来越普遍，虽然
 
 以上是REST架构六个核心约束中的其中三个，但我们已经可以看出RESTful系统之间和日常通过网页浏览来使用互联网的相似性。要记住，HTTP是应用RESTful API的主要方式，尽管传输类型在理论上可以是其它方式。为了真正地理解RESTful APIs，那么你必须也要理解HTTP基础。
 
-## 了解HTTP请求类型
+## 理解HTTP请求类型
 
 
 
 
 
-## 了解HTTP响应码
+## 理解HTTP响应码
 
 
 

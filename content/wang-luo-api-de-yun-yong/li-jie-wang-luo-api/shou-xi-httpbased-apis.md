@@ -38,7 +38,7 @@ RESTful API在网络行业中越来越流行，使用也越来越普遍，虽然
 
 ## 理解HTTP请求类型
 
-重要的是要明白，虽然每一个RESTful API都是基于HTTP的，但是最终我们会看到\*\*不遵守REST规则的基于HTTP的APIs，\*\*所以\(**不遵守REST规则的基于HTTP的APIs**\)不是RESTful的。但是，无论如何，这些API需要理解\(understanding\)HTTP。因为这些API使用HTTP作为传输方式，所以我们将使用的HTTP请求类型和响应代码\(response codes\)与互联网上已经使用的HTTP请求类型和响应代码\(response codes\)相同。
+重要的是要明白，虽然每一个RESTful API都是基于HTTP的，但是最终我们会看到\*\*不遵守REST规则的基于HTTP的APIs，\*\*所以\(**不遵守REST规则的基于HTTP的APIs**\)不是RESTful的。但是，无论如何，这些API需要理解\(understanding\)HTTP。因为这些API使用HTTP作为传输方式，所以我们将使用的HTTP请求类型和响应码\(response codes\)与互联网上已经使用的HTTP请求类型和响应码\(response codes\)相同。
 
 例如，常见的HTTP请求类型包括GET、POST、PATCH、PUT和DELETE。可想而知，GET求情用于向服务器请求数据，DELETE请求用于删除服务器上的资源，并且剩下的三个P\(POST、PATCH、PUT\)用于在服务器上进行更改\(make a change\)操作。
 
@@ -50,7 +50,7 @@ RESTful API在网络行业中越来越流行，使用也越来越普遍，虽然
 
 下表描述了这些请求类型。我们将在本章后面的实际例子中使用这些类型。
 
-| Request Types | Description |
+| 请求类型Request Types | 说明Description |
 | :--- | :--- |
 | GET | 检索指定资源 |
 | PUT | 创建或替换一个资源 |
@@ -61,6 +61,12 @@ RESTful API在网络行业中越来越流行，使用也越来越普遍，虽然
 ## 理解HTTP响应码
 
 
+
+| 相应码Response Codes | 描述Description |
+| :--- | :--- |
+| 2XX | 成功\(successful\) |
+| 4XX | 客户端错误\(Client error\) |
+| 5XX | 服务器错误\(Server error\) |
 
 
 

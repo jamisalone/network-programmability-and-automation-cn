@@ -38,9 +38,25 @@ RESTful API在网络行业中越来越流行，使用也越来越普遍，虽然
 
 ## 理解HTTP请求类型
 
+重要的是要明白，虽然每一个RESTful API都是基于HTTP的，但是最终我们会看到\*\*不遵守REST规则的基于HTTP的APIs，\*\*所以\(**不遵守REST规则的基于HTTP的APIs**\)不是RESTful的。但是，无论如何，这些API需要理解\(understanding\)HTTP。因为这些API使用HTTP作为传输方式，所以我们将使用的HTTP请求类型和响应代码\(response codes\)与互联网上已经使用的HTTP请求类型和响应代码\(response codes\)相同。
 
+例如，常见的HTTP请求类型包括GET、POST、PATCH、PUT和DELETE。可想而知，GET求情用于向服务器请求数据，DELETE请求用于删除服务器上的资源，并且剩下的三个P\(POST、PATCH、PUT\)用于在服务器上进行更改\(make a change\)操作。
 
+在网络背景下，我们可以把这些请求类型看作以下几种：
 
+* GET：获得配置或操作数据
+* PUT、POST、PATCH：进行配置更改
+* DELETE：删除特定配置
+
+下表描述了这些请求类型。我们将在本章后面的实际例子中使用这些类型。
+
+| Request Types | Description |
+| :--- | :--- |
+| GET | 检索指定资源 |
+| PUT | 创建或替换一个资源 |
+| PATCH | 创建或更新一个资源对象 |
+| POST | 创建一个资源对象 |
+| DELETE | 删除一个指定资源 |
 
 ## 理解HTTP响应码
 

@@ -2,7 +2,7 @@
 description: Getting Familiar with RESTful APIs
 ---
 
-# 熟悉HTTP-based APIs
+# 熟悉基于HTTP的APIs
 
 在网络API的背景下，有两种类型的基于HTTP的API需要理解。它们是RESTful HTTP-based APIs和non-RESTFUL HTTP-based APIs。为了更好地理解它们以及RESTful一词的含义，我们将从研究RESTful API开始。一旦你理解了RESTful架构和原则，我们将继续前进，并将它们与non-RESTFUL HTTP-based APIs进行比较。
 

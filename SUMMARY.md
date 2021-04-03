@@ -29,7 +29,7 @@
   * [总结](content/wang-luo-pei-zhi-mo-ban/zong-jie.md)
 * [第七章 网络API的运用](content/wang-luo-api-de-yun-yong/README.md)
   * [理解网络API](content/wang-luo-api-de-yun-yong/li-jie-wang-luo-api/README.md)
-    * [熟悉HTTP-based APIs](content/wang-luo-api-de-yun-yong/li-jie-wang-luo-api/shou-xi-httpbased-apis.md)
+    * [熟悉基于HTTP的APIs](content/wang-luo-api-de-yun-yong/li-jie-wang-luo-api/shou-xi-httpbased-apis.md)
     * [深入了解NETCONF](content/wang-luo-api-de-yun-yong/li-jie-wang-luo-api/shen-ru-le-jie-netconf.md)
   * [探索网络API](content/wang-luo-api-de-yun-yong/tan-suo-wang-luo-api.md)
   * [使用网络API实施自动化](content/wang-luo-api-de-yun-yong/shi-yong-wang-luo-api-shi-shi-zi-dong-hua.md)

@@ -32,7 +32,7 @@ RESTful API在网络行业中越来越流行，使用也越来越普遍，虽然
 
 
 
-## 理解non-RESTful HTTP-based APIs
+## 理解基于HTTP的非RESTful APIs
 
 
 

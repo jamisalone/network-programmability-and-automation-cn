@@ -64,7 +64,7 @@ RESTful API在网络行业中越来越流行，使用也越来越普遍，虽然
 
 
 
-| 相应码Response Codes | 描述Description |
+| 响应码Response Codes | 描述Description |
 | :--- | :--- |
 | 2XX | 成功\(successful\) |
 | 4XX | 客户端错误\(Client error\) |

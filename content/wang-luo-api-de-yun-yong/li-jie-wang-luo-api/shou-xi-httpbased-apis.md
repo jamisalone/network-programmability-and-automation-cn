@@ -78,7 +78,7 @@ RESTful API在网络行业中越来越流行，使用也越来越普遍，虽然
 
 ## 理解基于HTTP的非RESTful APIs
 
-虽然RESTful API是首选，但你也可能会遇到基于HTTP的非RESTful API。在网络行业中，这种情况常见于**位于CLI之上的API**，这就意味着API调用实际上是向设备发送一条命令，而不是发送原生结构化数据\(native structured data\)。首选的方法是让所有现代网络平台的CLI或Web UI使用底层API \(underlying API\)，但是对于使用命令构建的“传统”或现有系统来说，事实上非RESTful API的使用是常见的，因为这种**添加API的方式**比重构底层系统更容易。
+虽然RESTful API是首选，但你也可能会遇到基于HTTP的非RESTful API。在网络行业中，这种情况常见于**位于CLI之上的API**，这就意味着API调用实际上是向设备发送一条命令，而不是发送原生结构化数据\(native structured data\)。首选的方法是让所有现代网络平台的CLI或Web UI使用底层API \(underlying API\)，但是对于使用命令构建的“传统”或现有系统来说，事实上非RESTful API的使用是常见的，因为这种**添加API的方式** \(\[译者注\]指的是在CLI或者Web UI之上构建API\) 比重构底层系统更容易。
 
 基于HTTP的RESTful API和基于HTTP的非RESTful API有两个主要差异。我们之前介绍了HTTP请求类型的概念，这些请求类型映射到一个特定的动词\(verb\)，如GET、POST、PATCH、PUT和DELETE。RESTful API使用特定动词来指定所请求的目标服务器配置更改的类型 \(type of change\)。举个例子，在网络的背景下，如果你发送一个HTTP GET，那么配置更改的动作则不会发生，因为你仅仅是执行数据检索。但是，**基于HTTP但不遵守RESTful规则的系统会对每一个API调用使用相同的HTTP动词 \(verb\)**。这意味着，**如果你检索数据或进行配置更改，所有的API调用都可以使用一个POST请求**。如果你在一个给定的API类型中看到这种情况，它仍然是一个基于HTTP的API，但不是一个基于HTTP的RESTful API。
 

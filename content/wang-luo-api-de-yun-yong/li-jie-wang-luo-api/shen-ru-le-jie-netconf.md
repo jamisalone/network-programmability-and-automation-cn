@@ -24,7 +24,9 @@ NETCONF的**核心属性之一就是能够利用不同配置数据存储\(config
 
 ## 学习NETCONF协议栈
 
+我们已经介绍了NETCONF的几个属性，但是是时候深入理解一下用于客户端和服务器通信的NETCONF协议栈了。在我们的例子中，客户端将是一个Python应用或SSH客户端，而服务器则是我们要进行自动化的目标网络设备。
 
+NETCONF协议栈有四个核心层\(表7-3\)。我们将对每一层进行概述，并展示它们在客户端和服务器之间发送的XML对象的具体例子。
 
 | 层 Layer | 示例 Example |
 | :--- | :--- |
@@ -33,15 +35,47 @@ NETCONF的**核心属性之一就是能够利用不同配置数据存储\(config
 | 操作层 Operations | &lt;get-config&gt;, &lt;get&gt;, &lt;copy-config&gt;, &lt;lock&gt;, &lt;unlock&gt;, &lt;edit-config&gt;, &lt;delete-config&gt;, &lt;kill-session&gt;, &lt;close-session&gt; |
 | 内容层 Content | Configuration/filers: XML representation of data models \(YANG, XSD\) |
 
-
+{% hint style="info" %}
+NETCONF只支持XML的数据编码。另一方面，要记住，RESTful API支持JSON和/或XML。
+{% endhint %}
 
 ### 传输层
 
+NETCONF通常使用SSH作为传输层来实现；它是自己的SSH子系统。虽然我们的所有例子都使用NETCONF over SSH，但从技术角度来说，通过NETCONF over SOAP、NETCONF over TLS或其它任意满足**NETCONF要求**的协议来实现NETCONF也是可能的。随着SOAP向RESTful API的迁移，NETCONF over SOAP的进一步发展是有限的，并且随着通过NETCONF over TLS成为可能，本书提到的平台目前都不支持它\(NETCONF over SOAP\)了。
 
+下面是NETCONF的其中一些要求：
+
+* 必须是一个面向连接的会话，因此客户端和服务器之间必须有一个一致的连接\(consistent connection\)；
+* NETCONF会话必须提供认证\(authentication\)、数据完整性\(data integrity\)、保密性\(confidentiality\)和回复保护\(reply protection\)的方式；
+* 虽然NETCONF可以用其它传输协议来实现，但每个实现都必须至少要支持SSH。
 
 ### 消息层
 
+NETCONF消息是基于远程过程调用\(RPC-based, RPC: Remote Procedure Call\)的通信模型，每条消息都用XML编码。使用基于远程过程调用的模型，可以独立于传输层类型来使用XML消息。NETCONF支持两种消息类型，即`<rpc>`和`<rpc-reply>`。查看实际的XML编码对象有助于说明NETCONF，所以让我们看一看NETCONF的RPC请求。
 
+最简单的例子，消息类型只有`<rpc>`和`<rpc-reply>`，并且它们将始终位于编码对象中最外层的XML标签：
+
+```markup
+<rpc message-id="101">
+	<!-- rest of request as XML... -->
+</rpc>
+```
+
+每个NETCONF`<rpc>`都包含一个`message-id`的**必需属性**。上面这个例子中的`<rpc>`就出现了`message-id="101"`。这是一段客户端发给服务器的任意字符串\(arbitrary string\)。服务器会在响应头部\(response header\)中重用这个ID，因此客户端就支持服务器响应的是哪一条消息。
+
+另一个消息类型是`<rpc-reply>`。NETCONF服务器用`message-id`和从客户端接收的其它属性\(如XML命名空间\)来进行响应：
+
+```markup
+<rpc-reply message-id="101" xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
+	<data>
+		<!-- XML content/response... -->
+	</data>
+</rpc-reply>
+```
+
+上面这个&lt;rpc-reply&gt;的例子是假设了XML命名空间在客户端发送的&lt;rpc&gt;中。注意，来自NETCONF服务器的实际数据响应是嵌入在&lt;data&gt;标签中的。
+
+接下来，我们将展示NETCONF请求是如何指定它向服务器请求哪种特定NETCONF操作\(RPC\)的。
 
 ### 操作层
 

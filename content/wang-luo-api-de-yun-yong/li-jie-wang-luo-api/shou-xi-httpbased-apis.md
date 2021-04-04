@@ -82,7 +82,7 @@ RESTful API在网络行业中越来越流行，使用也越来越普遍，虽然
 
 基于HTTP的RESTful API和基于HTTP的非RESTful API有两个主要差异。我们之前介绍了HTTP请求类型的概念，这些请求类型映射到一个特定的动词\(verb\)，如GET、POST、PATCH、PUT和DELETE。RESTful API使用特定动词来指定所请求的目标服务器配置更改的类型 \(type of change\)。举个例子，在网络的背景下，如果你发送一个HTTP GET，那么配置更改的动作则不会发生，因为你仅仅是执行数据检索。但是，**基于HTTP但不遵守RESTful规则的系统会对每一个API调用使用相同的HTTP动词 \(verb\)**。这意味着，**如果你检索数据或进行配置更改，所有的API调用都可以使用一个POST请求**。如果你在一个给定的API类型中看到这种情况，它仍然是一个基于HTTP的API，但不是一个基于HTTP的RESTful API。
 
-另一个需要知道的常见差异主要在每次API调用中被使用的URL。如果你使用的是基于HTTP的API，则API总是使用相同的URL并且不允许你通过URL更改来访问某个特定资源，那么这个API就是基于HTTP的RESTful API。
+另一个需要知道的常见差异是每次API调用中被使用的URL。如果你使用的是基于HTTP的API，则API总是使用相同的URL并且不允许你通过URL更改来访问某个特定资源，那么这个API就是基于HTTP的RESTful API。
 
 在网络基础设施上使用基于HTTP的API，对行业来说是向着正确方向迈进了一大步，但是理想的是，所有HTTP API都将遵循REST的规则。
 

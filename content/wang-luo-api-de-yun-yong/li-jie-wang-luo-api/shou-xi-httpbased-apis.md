@@ -84,7 +84,7 @@ RESTful API在网络行业中越来越流行，使用也越来越普遍，虽然
 
 另一个需要知道的常见差异是每次API调用中被使用的URL。如果你使用的是基于HTTP的API，则API总是使用相同的URL并且不允许你通过URL更改来访问某个特定资源，那么这个API就是基于HTTP的RESTful API。
 
-在网络基础设施上使用基于HTTP的API，对行业来说是向着正确方向迈进了一大步，但是理想的是，所有HTTP API都将遵循REST的规则。
+在网络基础设施上使用基于HTTP的API，对行业来说是向着正确方向迈进了一大步，而理想的是，所有HTTP API还将遵循REST的规则。
 
 尽管你用相同工具来使用基于HTTP的RESTful API和基于HTTP的非RESTful API，但重要的是要意识到这些网络API的差异，因为基于HTTP的非RESTful API通常不像RESTful API那样灵活。
 

@@ -21,6 +21,6 @@ description: Building a Culture for Network Automation
 为此，我们将特别讨论三个话题。
 
 * 组织战略和灵活性 \(Organizational strategy and flexibility\)
-* 拥抱失败 \(Embracing failure\)
+* 拥抱故障 \(Embracing failure\)
 * 技能和教育 \(Skills and education\)
 

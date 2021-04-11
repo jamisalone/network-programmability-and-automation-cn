@@ -79,6 +79,101 @@ NETCONF消息是基于远程过程调用\(RPC-based, RPC: Remote Procedure Call\
 
 ### 操作层
 
+最外层的XML元素总是被发送的Message类型\(如`<rpc>`和`<rpc-reply>`\)。当你想要发送从客户端到服务器的请求消息时，下一个元素或者Message类型的子元素，是被请求的NETCONF操作。在表7-3中，你已经看到过了NETCONF操作的列表，现在我们一个一个地挨着学习。
+
+我们在这一章节学习的两个主要操作是`<get>`和`<edit-config>`。
+
+`<get>`操作检索**正在运行的配置和设备状态信息**。
+
+```markup
+<rpc message-id="101" xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
+	<get>
+		<!-- XML content/response... -->
+	</get>
+</rpc>
+```
+
+因为`<get>`是`<rpc>`消息内的子元素，这意味着客户端正在请求一个NETCONF的GET操作。
+
+在`<get>`的层次结构中，存在可选的**过滤器类型**\(optional filter types\)，这些过滤器允许你有选择地检索正在运行的部分配置，即_subtree_和_xpath_过滤器。我们的重点是subtree过滤器，它允许你提供一个XML文档，该文档是你想要在给定请求中检索的完整XML树分层结构\(complete XML tree hierarchy\)的一个子树。
+
+下一个例子中，我们使用`<native>`元素和URL[http://cisco.com/ns/yang/ned/ios](http://cisco.com/ns/yang/ned/ios)来引用一个具体的XML数据对象\(data object\)。这个XML数据对象是存在于目标设备上的具体数据模型的XML表示。这个数据模型将完整的运行配置用XML表示，但是我们请求的只有`<interface>`配置层次。
+
+{% hint style="info" %}
+如本章所示，实际上在客户端和服务器之间发送的JSON和XML对象都在很大程度上取决于厂商和操作系统。
+{% endhint %}
+
+接下来展示两个`<get>`操作的例子是来自运行于版本16.3以上代码的Cisco IOS-XE设备的XML请求。
+
+```markup
+<rpc message-id="101" xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
+	<get>
+		<filter type="subtree">
+			<native xmlns="<http://cisco.com/ns/yang/ned/ios>">
+				<interface>
+				</interface>
+			</native>
+		</filter>
+	</get>
+</rpc>
+```
+
+我们可以向这个过滤器的XML树中添加更多元素来缩小从NETCONF服务器返回的响应数据的范围。我们可以往过滤器中添加两个元素——因此将不接收所有接口的配置对象，而仅接收GigabitEthernet1的配置。
+
+```markup
+<rpc message-id="101" xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
+	<get>
+		<filter type="subtree">
+			<native xmlns="<http://cisco.com/ns/yang/ned/ios>">
+				<interface>
+					<GigabitEthernet>
+						<name>1</name>
+					</GigabitEthernet>
+				</interface>
+			</native>
+		</filter>
+	</get>
+</rpc>
+```
+
+下一个更常见的NETCONF操作是`<edit-config>`操作。这个操作用于配置更改。特别地，这个操作将配置加载到特定的配置数据存储中：运行\(配置\)、启动\(配置\)或候选\(配置\)。
+
+当使用`<edit-config>`操作时，你可以用`<target>`标签设置目标配置数据存储\(target configuration datastore\)。如果没有指定，它将被默认为运行配置。同时，在`<edit-config>`分层结构中，将要被加载到目标数据存储中的配置元素通常被封装在`<config>`元素中。在&lt;config&gt;内的XML元素映射回\(map back to\)特定的数据模型\(data model\)。
+
+```markup
+<rpc message-id="101" xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
+	<edit-config>
+		<target>
+			<running/>
+		</target>
+		<config>
+			<configuration>
+				<routing-options>
+					<static>
+						<route>
+							<name>0.0.0.0/0</name>
+							<next-hop>10.1.0.1</next-hop>
+						</route>
+					</static>
+				</routing-options>
+			</configuration>
+		</config>
+	</edit-config>
+</rpc>
+```
+
+当你使用`<edit-config>`操作时，`<config>`元素不是必需的。可以在`<config>`中使用的内容是基于给定设备上的NETCONF功能。如果支持\*\*:url\*\*功能，你就可以使用`<url>`标签来指定一个包含配置数据的文件的位置。
+
+{% hint style="info" %}
+我们将在本节后面介绍更多的NETCONF功能。
+{% endhint %}
+
+
+
+
+
+
+
 
 
 ### 内容层

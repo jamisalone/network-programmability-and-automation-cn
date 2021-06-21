@@ -18,7 +18,7 @@ _**探索网络API**_
 
 我们介绍常用的工具，用于测试和学习如何使用每种API类型。
 
-_**自动使用网络API**_
+_**使用网络API实现自动化**_
 
 最后，我们看一下允许你开始自动化网络的Python库。我们将看看用于消费基于 HTTP 的 API 的 Python requests 库，用于与 NETCONF 设备交互的 ncclient，以及用于使用 SSH 自动化设备的 netmiko。
 
